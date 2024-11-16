@@ -1,0 +1,9 @@
+{
+  "name": "recruitment-task",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/recruitment-task/src",
+  "projectType": "application",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project recruitment-task --web",
+  "targets": {}
+}
