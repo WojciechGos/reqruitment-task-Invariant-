@@ -1,0 +1,26 @@
+{
+  "name": "recruitment-task-api",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/recruitment-task-api/src",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "dependsOn": ["build"],
+      "options": {
+        "buildTarget": "recruitment-task-api:build",
+        "runBuildTargetDependencies": false
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "recruitment-task-api:build:development"
+        },
+        "production": {
+          "buildTarget": "recruitment-task-api:build:production"
+        }
+      }
+    }
+  }
+}
