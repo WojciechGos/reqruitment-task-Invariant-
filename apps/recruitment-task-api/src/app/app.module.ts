@@ -3,11 +3,10 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../users/users.entity'
-import { UsersController } from '../users/users.controller';
 import { ConfigModule } from '@nestjs/config';
-import { AuthController } from '../auth/auth.controller';
 import { UsersModule } from '../users/users.module';
 import { AuthModule } from '../auth/auth.module';
+import { TwitterIntegrationModule } from '../twitter-integration/twitter-integration.module';
 
 @Module({
   imports: [
@@ -26,7 +25,8 @@ import { AuthModule } from '../auth/auth.module';
     }),
     TypeOrmModule.forFeature([User]), 
     UsersModule,
-    AuthModule
+    AuthModule,
+    TwitterIntegrationModule
   ],
   controllers: [AppController],
   providers: [AppService],
