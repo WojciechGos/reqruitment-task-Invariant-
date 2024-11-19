@@ -16,7 +16,7 @@ async function bootstrap() {
 
   app.use(
     session({
-      secret: 'your-strong-secret', // Replace with a secure, unique secret
+      secret: 'your-strong-secret',
       resave: false,
       saveUninitialized: false,
       cookie: { secure: process.env.NODE_ENV === 'production' }, // Set secure cookies in production

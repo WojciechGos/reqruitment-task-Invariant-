@@ -1,9 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import { IsEmail } from 'class-validator';
 
-
-
 @Entity()
+@Unique(["email"])
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
@@ -13,17 +12,17 @@ export class User {
   email: string 
 
   @Column()
+  username: string
+
+  @Column({nullable: true})
   walletAddress: string;
 
-  @Column()
+  @Column({default: false})
   isFollowingInvariantAccount: boolean
 
-  @Column()
-  twitterId: string;
+  @Column({nullable: true})
+  token: string
 
-  @Column()
-  accessToken: string;
-
-  @Column()
-  accessTokenSecret: string;
+  @Column({nullable: true})
+  tokenSecret: string
 }

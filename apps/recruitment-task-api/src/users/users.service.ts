@@ -1,8 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { User } from './users.entity';
 import { TwitterIntegrationService } from '../twitter-integration/twitter-integration.service';
+import { TwitterUserDTO } from '../auth/dto/twitter-user.dto';
+import { CurrentUserDTO } from '../auth/dto/current-user.dto';
 
 @Injectable()
 export class UsersService {
@@ -12,11 +14,35 @@ export class UsersService {
     private readonly twitterIntegrationService: TwitterIntegrationService
   ) {}
 
-  async add(walletAddress: string): Promise<User> {
+  async saveTwitterUser(twitterUserDTO: TwitterUserDTO): Promise<User>{
 
-    Boolean isFollowing = this.twitterIntegrationService.checkUserFollowsAccount()
+    const user = this.userRepository.create({
+      email: twitterUserDTO.email,
+      username: twitterUserDTO.username,
+      token: twitterUserDTO.token,
+      tokenSecret: twitterUserDTO.tokenSecret
+    });
 
-    const user = this.userRepository.create({  });
+    return this.userRepository.save(user);
+  }
+
+  async add(currentUser: CurrentUserDTO, walletAddress: string): Promise<User> {
+
+    console.log("1")
+    const user: User = await this.findByEmail(currentUser.email);
+    
+    const isFollowingInvariantAccount: boolean = await this.twitterIntegrationService.checkUserFollowsAccount(user, 'invariant_labs');
+    
+    console.log("2")
+    if(isFollowingInvariantAccount){
+      throw new BadRequestException('You have to follow invariant_labs profile on the X')
+    }
+    
+    
+    user.isFollowingInvariantAccount = isFollowingInvariantAccount;
+    user.walletAddress = walletAddress;
+    
+    console.log("5")
     return this.userRepository.save(user);
   }
 
@@ -24,7 +50,17 @@ export class UsersService {
     return this.userRepository.find();
   }
 
-  async findOne(email: string): Promise<User> {
+  async findByEmail(email: string): Promise<User> {
     return this.userRepository.findOneBy({email: email});
   }
+
+  async findByUsername(username:string) : Promise<User>{
+    return this.userRepository.findOneBy({username: username});
+  }
+
+  async updateUser(user: User): Promise<UpdateResult>{
+    return this.userRepository.update({id: user.id}, user);
+  }
+
+ 
 }
